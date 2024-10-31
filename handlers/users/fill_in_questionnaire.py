@@ -16,13 +16,14 @@ async def get_branch(message: types.Message, state: FSMContext):
         await state.finish()
     except:
         pass
+
     markup = await all_branches_default_keyboard()
-    await message.answer(text="🏢 So'rovnomani to'ldirish uchun filialni tanlang:", reply_markup=markup)
     await CreateQuestionnaireState.branch_id.set()
     user_telegram_id = message.from_user.id
     users = await db.select_users(telegram_id=user_telegram_id)
     if users:
-        await state.update_data(user_id=users[0]['id'])
+        user_id = users[0]['id']
+        await state.update_data(user_id=user_id)
     else:
         username = await message.from_user.username
         full_name = await message.from_user.full_name
@@ -31,7 +32,15 @@ async def get_branch(message: types.Message, state: FSMContext):
             full_name=full_name,
             telegram_id=user_telegram_id,
         )
-        await state.update_data(user_id=user['id'])
+        user_id = user['id']
+        await state.update_data(user_id=user_id)
+
+    questionnaires = await db.select_questionnaires(user_id=user_id)
+    if not questionnaires:
+        await message.answer(text="🏢 So'rovnomani to'ldirish uchun filialni tanlang:", reply_markup=markup)
+    else:
+        await message.answer(text="⚠️ Siz ilgari so'rovnomaga javob yuborgansiz.", reply_markup=back_to_menu)
+        await state.finish()
 
 
 @dp.message_handler(state=CreateQuestionnaireState.branch_id)
