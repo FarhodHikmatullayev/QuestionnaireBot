@@ -26,7 +26,7 @@ menu_default_keyboard_for_users = ReplyKeyboardMarkup(
     resize_keyboard=True,
     keyboard=[
         [
-            KeyboardButton(text="Atvet 📝 Atvet yuborish"),
+            KeyboardButton(text="📝 Atvet yuborish"),
         ],
     ]
 )

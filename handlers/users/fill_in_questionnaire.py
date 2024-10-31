@@ -25,8 +25,8 @@ async def get_branch(message: types.Message, state: FSMContext):
         user_id = users[0]['id']
         await state.update_data(user_id=user_id)
     else:
-        username = await message.from_user.username
-        full_name = await message.from_user.full_name
+        username = message.from_user.username
+        full_name = message.from_user.full_name
         user = await db.create_user(
             username=username,
             full_name=full_name,
